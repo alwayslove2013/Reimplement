@@ -15,10 +15,6 @@
         <img src="../icons/tag5.png">
         <span class="searchTag" @mouseenter="hoverTagShow(index)" @mouseleave="hoverTagHide(index)" :id="'tag' + index">{{ item.name }}</span>
       </div>
-      <!--<div v-for="item in computedAuthors" :key="item.name" :id="item.name">-->
-        <!--<img src="../icons/author5.png">-->
-        <!--<span class="searchAuthor">{{ item.name }}</span>-->
-      <!--</div>-->
     </div>
   </div>
 </template>
@@ -40,19 +36,6 @@ export default {
       'word2authors',
       'word2tags'
     ])
-    // computedAuthors () {
-    //   let foo = this
-    //   let results = []
-    //   let items = foo.word2authors
-    //   items.forEach((d) => {
-    //     let tmp = {...d}
-    //     tmp.type = 'author'
-    //     tmp.html = '<div id="id-' + d.name + '"><span>' + d.name + '</span></div>'
-    //     results.push(tmp)
-    //     console.log(tmp)
-    //   })
-    //   return results
-    // }
   },
   methods: {
     ...mapActions([
