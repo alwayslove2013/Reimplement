@@ -4,7 +4,7 @@
     <div id="search">
       <div v-for="(item, index) in word2authors" :key="item.name" :id="item.name">
         <img src="../icons/author5.png">
-        <span class="searchAuthor" @mouseenter="hoverAuthorShow(index)" @mouseleave="hoverAuthorHide(index)" :id="'author' + index">{{ item.name }}</span>
+        <span class="searchAuthor" @mouseenter="hoverAuthorShow(index)" @mouseleave="hoverAuthorHide(index)" @click="setAuthorCore(item.name)" :id="'author' + index">{{ item.name }}</span>
       </div>
       <div v-for="(item, index) in word2titles" :key="item.name" :id="item.name">
         <img src="../icons/item5.png">
@@ -34,14 +34,17 @@ export default {
     ...mapState([
       'word2titles',
       'word2authors',
-      'word2tags'
+      'word2tags',
+      'coreType',
+      'coreText'
     ])
   },
   methods: {
     ...mapActions([
       'updateWord2Titles',
       'updateWord2Authors',
-      'updateWord2Tags'
+      'updateWord2Tags',
+      'updateCore'
     ]),
     hoverAuthorShow (index) {
       $('#author' + index).css('border', '2px solid #3488BC')
@@ -60,6 +63,13 @@ export default {
     },
     hoverTagHide (index) {
       $('#tag' + index).css('border', '')
+    },
+    setAuthorCore (name) {
+      let tmp = {
+        type: 'author',
+        text: name
+      }
+      this.updateCore(tmp)
     }
   },
   watch: {

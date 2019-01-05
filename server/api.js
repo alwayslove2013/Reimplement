@@ -14,6 +14,37 @@ module.exports = function(app) {
       name: 'Min Tian'
     })
   })
+  app.get('/api/core_author', function (req, res) {
+    let data = req.query
+    db.authorModel.find({name: data.word}).sort({'cites': -1}).exec((err, doc) => {
+      if (err) {
+        console.log('DOI 查询失败' + err)
+        res.json({code: 1, msg: '查询出错，未知原因'})
+        return
+      } else {
+        if (!doc) {
+          res.json({code: 2, msg: '查询不到，未知原因'})
+          return
+        } else {
+          // console.log(doc.slice(0, 12))
+          // res.json({code:3, msg: '查询成功', data: doc.slice(0, 12)})
+          let results = []
+          let tmp = doc.slice(0, 20)
+          for (let key in tmp) {
+            let item = doc[key]
+            let result = {
+              items: item.items,
+              name: item.name
+            }
+            results.push(result)
+          }
+          // results.sort(sortFouction)
+          // console.log(results)
+          res.json({code:3, msg: '查询成功', data: results})
+        }
+      }
+    })
+  })
   app.get('/api/search_titles', function (req, res) {
     let data = req.query
     // console.log('req', data, data.word)

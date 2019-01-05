@@ -47,7 +47,7 @@ const mutations = {
 
 const actions = {
   updateCore ({commit}, payload) {
-    console.log('更新core')
+    console.log('更新core', payload)
     commit(types.UPDATE_CORE_TYPE, payload.type)
     commit(types.UPDATE_CORE_TEXT, payload.text)
     axios({
@@ -61,7 +61,8 @@ const actions = {
       .then(function (response) {
         console.log('test: 接受后端的数据', response.data)
         let items = response.data.data
-        commit(types.UPDATE_CORE2ITEMS, items)
+        console.log('coreData', items)
+        // commit(types.UPDATE_CORE2ITEMS, items)
       })
       .catch(function (error) {
         console.log(error)
