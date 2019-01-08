@@ -1,27 +1,35 @@
 <template>
   <div>
-    <input v-model="inputText" type="text" id="searchInput" placeholder="Find author, paper or keyword" size="40">
-    <div id="search">
-      <div v-for="(item, index) in word2authors" :key="item.name" :id="item.name">
-        <img src="../icons/author5.png">
-        <span class="searchAuthor" @mouseenter="hoverAuthorShow(index)" @mouseleave="hoverAuthorHide(index)" @click="setAuthorCore(item.name)" :id="'author' + index">{{ item.name }}</span>
-      </div>
-      <div v-for="(item, index) in word2titles" :key="item.name" :id="item.name">
-        <img src="../icons/item5.png">
-        <span class="searchItem" @mouseenter="hoverTitleShow(index)" @mouseleave="hoverTitleHide(index)" :id="'title' + index">{{ item.name.slice(0, 40) }}</span>
-        <span>...</span>
-      </div>
-      <div v-for="(item, index) in word2tags" :key="item.name" :id="item.name">
-        <img src="../icons/tag5.png">
-        <span class="searchTag" @mouseenter="hoverTagShow(index)" @mouseleave="hoverTagHide(index)" :id="'tag' + index">{{ item.name }}</span>
+    <div id="searchView">
+      <input v-model="inputText" type="text" id="searchInput" placeholder="Find author, paper or keyword" size="40">
+      <div id="search">
+        <div v-for="(item, index) in word2authors" :key="item.name" :id="item.name">
+          <img src="../icons/author5.png">
+          <span class="searchAuthor" @mouseenter="hoverAuthorShow(index)" @mouseleave="hoverAuthorHide(index)" @click="setAuthorCore(item.name)" :id="'author' + index">{{ item.name }}</span>
+        </div>
+        <div v-for="(item, index) in word2titles" :key="item.name" :id="item.name">
+          <img src="../icons/item5.png">
+          <span class="searchItem" @mouseenter="hoverTitleShow(index)" @mouseleave="hoverTitleHide(index)" :id="'title' + index">{{ item.name.slice(0, 40) }}</span>
+          <span>...</span>
+        </div>
+        <div v-for="(item, index) in word2tags" :key="item.name" :id="item.name">
+          <img src="../icons/tag5.png">
+          <span class="searchTag" @mouseenter="hoverTagShow(index)" @mouseleave="hoverTagHide(index)" :id="'tag' + index">{{ item.name }}</span>
+        </div>
       </div>
     </div>
+    <div id="testDisplay" style="display: none">
+      <test-display></test-display>
+    </div>
   </div>
+
 </template>
 
 <script>
 import $ from 'jquery'
 import { mapState, mapActions } from 'vuex'
+import TestDisplay from './TestDisplay'
+
 export default {
   name: 'SearchView',
   data () {
@@ -29,6 +37,9 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       inputText: ''
     }
+  },
+  components: {
+    TestDisplay
   },
   computed: {
     ...mapState([
@@ -70,6 +81,8 @@ export default {
         text: name
       }
       this.updateCore(tmp)
+      $('#searchView').css('display', 'none')
+      $('#testDisplay').css('display', 'inherit')
     }
   },
   watch: {
