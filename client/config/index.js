@@ -58,7 +58,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',
+    assetsPublicPath: '/',      // 之前修改为 './' 可以在服务器上看到SearchView，但是我现在不行了
 
     /**
      * Source Maps
