@@ -5,9 +5,42 @@ module.exports = function (app) {
     next()
   })
   app.get('/api/test', function (req, res) {
+    // dicModel测试
+    // db.dicModel.find({}).exec((err, doc) => {
+    //   if (err) {
+    //     res.json({
+    //       msg: 'error'
+    //     })
+    //   }
+    //   console.log(doc)
+    //   res.json({
+    //     text: 'connect!',
+    //     name: 'Min Tian',
+    //     doc: doc
+    //   })
+    // })
     res.json({
       text: 'connect!',
       name: 'Min Tian'
+    })
+  })
+  app.get('/api/get_id_dic', (req, res) => {
+    db.dicModel.findOne({}).exec((err, doc) => {
+      if (err) {
+        res.json({
+          msg: 'error'
+        })
+      } else {
+        // console.log(doc)
+        let result = {
+          authorDic: doc.authorDic,
+          itemDic: doc.itemDic,
+          tagDic: doc.tagDic
+        }
+        res.json({
+          data: result
+        })
+      }
     })
   })
   app.get('/api/core_author', function (req, res) {

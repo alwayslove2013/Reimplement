@@ -55,7 +55,8 @@ export default {
       'updateWord2Titles',
       'updateWord2Authors',
       'updateWord2Tags',
-      'updateCore'
+      'updateCore',
+      'updateIdDic'
     ]),
     hoverAuthorShow (index) {
       $('#author' + index).css('border', '2px solid #3488BC')
@@ -96,6 +97,7 @@ export default {
   mounted () {
     // let tmp = $('#search')
     console.log()
+    this.updateIdDic()
     let winWidth = $(window).width()
     // let winHeight = $(window).height()
     let searchWidth = $('#searchInput').width()

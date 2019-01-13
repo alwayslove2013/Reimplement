@@ -39,6 +39,12 @@ const keywordSchema = new Schema({
   tags: Array
 })
 
+const idDicSchema = new Schema({
+  authorDic: Schema.Types.Mixed,
+  itemDic: Schema.Types.Mixed,
+  tagDic: Schema.Types.Mixed
+})
+
 // 这句话用来干嘛....
 mongoose.Promise = global.Promise
 
@@ -59,7 +65,8 @@ mongoose.connection.once('open', function () {
 const db = {
   paperModel: mongoose.model('papers', paperSchema),
   authorModel: mongoose.model('authors', authorSchema),
-  tagModel: mongoose.model('tags', keywordSchema)
+  tagModel: mongoose.model('tags', keywordSchema),
+  dicModel: mongoose.model('dics', idDicSchema)
 }
 
 module.exports = db

@@ -31,7 +31,10 @@ export default {
     ...mapState([
       'core2items',
       'coreType',
-      'coreText'
+      'coreText',
+      'authorIdDic',
+      'itemIdDic',
+      'tagIdDic'
     ])
   },
   mounted () {

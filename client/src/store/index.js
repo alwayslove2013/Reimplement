@@ -10,7 +10,10 @@ const state = {
   word2titles: [],
   word2tags: [],
   word2authors: [],
-  core2items: []
+  core2items: [],
+  authorIdDic: {},
+  itemIdDic: {},
+  tagIdDic: {}
 }
 
 const getters = {}
@@ -21,7 +24,10 @@ const types = {
   UPDATE_WORD2AUTHORS: 'UPDATE_WORD2AUTHORS',
   UPDATE_CORE_TYPE: 'UPDATE_CORE_TYPE',
   UPDATE_CORE_TEXT: 'UPDATE_CORE_TEXT',
-  UPDATE_CORE2ITEMS: 'UPDATE_CORE2ITEMS'
+  UPDATE_CORE2ITEMS: 'UPDATE_CORE2ITEMS',
+  UPDATE_AUTHORIDDIC: 'UPDATE_AUTHORIDDIC',
+  UPDATE_ITEMIDDIC: 'UPDATE_ITEMIDDIC',
+  UPDATE_TAGIDDIC: 'UPDATE_TAGIDDIC'
 }
 
 const mutations = {
@@ -42,6 +48,15 @@ const mutations = {
   },
   [types.UPDATE_CORE2ITEMS] (state, payload) {
     state.core2items = payload
+  },
+  [types.UPDATE_AUTHORIDDIC] (state, payload) {
+    state.authorIdDic = payload
+  },
+  [types.UPDATE_ITEMIDDIC] (state, payload) {
+    state.itemIdDic = payload
+  },
+  [types.UPDATE_TAGIDDIC] (state, payload) {
+    state.tagIdDic = payload
   }
 }
 
@@ -140,6 +155,25 @@ const actions = {
           console.log(error)
         })
     }
+  },
+  updateIdDic ({commit}) {
+    console.log('begin updateIdDic')
+    axios({
+      methods: 'get',
+      url: '/api/get_id_dic',
+      params: {},
+      timeout: 10000
+    })
+      .then((res) => {
+        let foo = res.data.data
+        commit(types.UPDATE_AUTHORIDDIC, foo.authorDic)
+        commit(types.UPDATE_ITEMIDDIC, foo.itemDic)
+        commit(types.UPDATE_TAGIDDIC, foo.tagDic)
+        console.log('end updateIdDic')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 }
 
