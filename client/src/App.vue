@@ -26,4 +26,14 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+.item {
+  display: block;
+  color: #238647;
+  background: rgba(255,255,255,.5);
+  border-radius: 1.5em;
+  border: 2px solid #62A55E;
+  padding-left: 18px;
+  padding-right: 4px;
+  background: url("./icons/item5.png") no-repeat left center;
+}
 </style>

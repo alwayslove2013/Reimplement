@@ -48,22 +48,45 @@ export default {
       let itemDiv = d3.select('#itemDiv')
       itemDiv.selectAll('div').remove()
       let itemDivs = itemDiv.append('div').selectAll('div').data(items).enter()
+      // itemDivs
+      //   .append('svg')
+      //   .attr('width', 10)
+      //   .attr('height', 10)
+      //   .style('transform', (d, i) => {
+      //     let winWidth = $(window).width()
+      //     let winHeight = $(window).height()
+      //     let x = winWidth * 0.1 + winWidth / 20 * i
+      //     let y = winHeight * 0.6
+      //     return 'translate(' + x + 'px, ' + y + 'px)'
+      //   })
+      //   .append('rect')
+      //   .attr('width', 8 + 'px')
+      //   .attr('height', 8 + 'px')
+      //   .style('fill', 'red')
       itemDivs
         .append('div')
         .attr('id', (d, i) => {
           return i
         })
-        // .style('transform', (d, i) => {
-        //   let winHeight = $(window).height()
-        //   let winWidth = $(window).width()
-        //   let x = winWidth * 0.3 + winWidth / 10 * i
-        //   let y = winHeight * 0.7
-        //   return 'translate(\' + x + \'px, \' + y + \'px) rotate(' + -60 + 'deg)'
-        // })
-        .append('span')
-        .text((d) => {
-          return d.name.slice(0, 20)
+        .style('position', 'absolute')
+        .style('top', $(window).height() * 0.5 + 'px')
+        .style('left', (d, i) => {
+          let winWidth = $(window).width()
+          let x = winWidth * 0.1 + winWidth / 20 * i
+          return x + 'px'
         })
+        .style('transform', 'rotate(' + -60 + 'deg)')
+        .style('text-align', 'center')
+        .append('span')
+        .classed('item', true)
+        .style('text-overflow', 'ellipsis')
+        .style('overflow', 'hidden')
+        .style('white-space', 'nowrap')
+        .style('width', 320 + 'px')
+        .text((d) => {
+          return d.name
+        })
+        // .style('transform', 'rotate(' + -60 + 'deg)')
     }
   },
   methods: {
@@ -85,7 +108,7 @@ export default {
   .author {
     color: #004787;
     background: rgba(255,255,255,.5);
-    border-radius: .5em;
+    border-radius: 1.5em;
     border: 2px solid #3488BC;
     padding-left: 18px;
     padding-right: 4px;
