@@ -5,11 +5,11 @@
       <span id="coreSpan">{{coreText}}</span>
     </div>
   </div>
+  <div id="authorDiv">
+  </div>
   <div id="itemDiv">
-    <!--<div v-for="(item, index) in core2items" :key="item.name">-->
-      <!--<span>{{index}}</span>-->
-      <!--<span>{{item.name}}</span>-->
-    <!--</div>-->
+  </div>
+  <div id="tagDiv">
   </div>
   <svg>
     <rect @click="backSearchView" width="50px" height="50px" style="fill:rgb(0,0,255);stroke-width:1; stroke:rgb(0,0,0)"/>
@@ -48,9 +48,107 @@ export default {
       $('#coreSpan').addClass(this.coreType)
     },
     core2items (items) {
+      this.drawItemView(items)
+      let authors = this.computeAuthors(items)
+      // console.log('authors', authors)
+      // authors.forEach((author) => {
+      //   console.log('authors', author.items)
+      // })
+      let authorsLoc = this.computeAuthorsLoc(authors)
+      // console.log('Loc', authorsLoc)
+      this.drawAuthorView(authors, authorsLoc)
+    }
+  },
+  methods: {
+    ...mapActions([
+      'updateWord2Titles',
+      'updateWord2Authors',
+      'updateWord2Tags',
+      'updateCore'
+    ]),
+    locX (foo) {
+      let sum = 0
+      foo.items.forEach((d) => {
+        sum += (+d)
+      })
+      let result = Math.ceil((sum / foo.items.length) * 2) / 2
+      return result
+    },
+    backSearchView () {
+      $('#searchView').css('display', 'inherit')
+      $('#testDisplay').css('display', 'none')
+    },
+    computeAuthors (items) {
+      let authorsID = []
+      let authors = []
+      for (let key in items) {
+        let item = items[key]
+        let itemAuthorsId = item.authors
+        // console.log(itemAuthorsId)
+        itemAuthorsId.forEach((itemAuthorId) => {
+          // console.log(itemAuthorId)
+          let tmp = authorsID.indexOf(itemAuthorId)
+          if (tmp >= 0) {
+            authors[tmp].items.push(key)
+          } else {
+            let name = this.authorIdDic[itemAuthorId]
+            if (name !== this.coreText) {
+              let author = {
+                name: name,
+                id: itemAuthorId,
+                items: [key]
+              }
+              authorsID.push(itemAuthorId)
+              authors.push(author)
+              // console.log(authors)
+            }
+          }
+        })
+      }
+      return authors
+    },
+    computeAuthorsLoc (authors) {
+      let Loc = {}
+      authors.forEach((author) => {
+        let x = this.locX(author)
+        // console.log(author.name, y)
+        // if (y in Loc) {
+        //   Loc[y].push(author)
+        // } else {
+        //   Loc[y] = [author]
+        // }
+        if (x in Loc) {
+
+        } else {
+          Loc[x] = {}
+        }
+        let y = author.items.length
+        if (y in Loc[x]) {
+          Loc[x][y].push(author)
+        } else {
+          Loc[x][y] = [author]
+        }
+      })
+      return Loc
+    },
+    drawAuthorView (authors, loc) {
+      let authorDiv = d3.select('#authorDiv')
+      authorDiv.selectAll('div').remove()
+      console.log('authors', authors)
+      console.log('loc', loc)
+      for (let X in loc) {
+        console.log('locX', X, loc[X])
+        let count = Object.keys(loc[X]).length
+        console.log(count)
+        for (let key in loc[X]) {
+
+        }
+      }
+    },
+    drawItemView (items) {
       let itemDiv = d3.select('#itemDiv')
       itemDiv.selectAll('div').remove()
-      let itemDivs = itemDiv.append('div').selectAll('div').data(items).enter()
+      let itemDivs = itemDiv.selectAll('div').data(items).enter()
       // itemDivs
       //   .append('svg')
       //   .attr('width', 10)
@@ -69,7 +167,7 @@ export default {
       itemDivs
         .append('div')
         .attr('id', (d, i) => {
-          return i
+          return 'item_' + i
         })
         .style('position', 'absolute')
         .style('top', $(window).height() * 0.5 + 'px')
@@ -78,7 +176,7 @@ export default {
           let x = winWidth * 0.1 + winWidth / 20 * i
           return x + 'px'
         })
-        .style('transform', 'rotate(' + -60 + 'deg)')
+        .style('transform', 'rotate(' + 45 + 'deg)')
         .style('text-align', 'center')
         .append('span')
         .classed('item', true)
@@ -89,19 +187,6 @@ export default {
         .text((d) => {
           return d.name
         })
-        // .style('transform', 'rotate(' + -60 + 'deg)')
-    }
-  },
-  methods: {
-    ...mapActions([
-      'updateWord2Titles',
-      'updateWord2Authors',
-      'updateWord2Tags',
-      'updateCore'
-    ]),
-    backSearchView () {
-      $('#searchView').css('display', 'inherit')
-      $('#testDisplay').css('display', 'none')
     }
   }
 }
