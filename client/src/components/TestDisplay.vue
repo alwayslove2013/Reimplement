@@ -44,8 +44,7 @@ export default {
     coreText () {
       let winHeight = $(window).height()
       $('#coreDiv').css('transform', 'translate(' + 50 + 'px, ' + winHeight / 2 + 'px)')
-      $('#coreSpan').removeClass()
-      $('#coreSpan').addClass(this.coreType)
+      $('#coreSpan').removeClass().addClass(this.coreType)
     },
     core2items (items) {
       this.drawItemView(items)
