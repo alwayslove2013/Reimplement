@@ -57,6 +57,12 @@ export default {
       let authorsLoc = this.computeAuthorsLoc(authors)
       // console.log('Loc', authorsLoc)
       this.drawAuthorView(authors, authorsLoc)
+
+      let tags = this.computeTags(items)
+      console.log('tags', tags)
+      let tagsLoc = this.computeTagsLoc(tags)
+      console.log('tagsLoc', tagsLoc)
+      this.drawTagView(tags, tagsLoc)
     }
   },
   methods: {
@@ -107,6 +113,35 @@ export default {
       }
       return authors
     },
+    computeTags (items) {
+      let tagsID = []
+      let tags = []
+      for (let key in items) {
+        let item = items[key]
+        let itemTagsId = item.tags
+        // console.log(itemAuthorsId)
+        itemTagsId.forEach((itemTagId) => {
+          // console.log(itemAuthorId)
+          let tmp = tagsID.indexOf(itemTagId)
+          if (tmp >= 0) {
+            tags[tmp].items.push(key)
+          } else {
+            let name = this.tagIdDic[itemTagId]
+            if (name !== this.coreText) {
+              let tag = {
+                name: name,
+                id: itemTagId,
+                items: [key]
+              }
+              tagsID.push(itemTagId)
+              tags.push(tag)
+              // console.log(authors)
+            }
+          }
+        })
+      }
+      return tags
+    },
     computeAuthorsLoc (authors) {
       let Loc = {}
       authors.forEach((author) => {
@@ -131,17 +166,117 @@ export default {
       })
       return Loc
     },
+    computeTagsLoc (tags) {
+      let Loc = {}
+      tags.forEach((tag) => {
+        let x = this.locX(tag)
+        // console.log(author.name, y)
+        // if (y in Loc) {
+        //   Loc[y].push(author)
+        // } else {
+        //   Loc[y] = [author]
+        // }
+        if (x in Loc) {
+
+        } else {
+          Loc[x] = {}
+        }
+        let y = tag.items.length
+        if (y in Loc[x]) {
+          Loc[x][y].push(tag)
+        } else {
+          Loc[x][y] = [tag]
+        }
+      })
+      return Loc
+    },
     drawAuthorView (authors, loc) {
       let authorDiv = d3.select('#authorDiv')
       authorDiv.selectAll('div').remove()
-      console.log('authors', authors)
-      console.log('loc', loc)
+      // console.log('authors', authors)
+      // console.log('loc', loc)
       for (let X in loc) {
-        console.log('locX', X, loc[X])
-        let count = Object.keys(loc[X]).length
-        console.log(count)
-        for (let key in loc[X]) {
-
+        // console.log('locX', X, loc[X])
+        let bigGapCount = Object.keys(loc[X]).length
+        let smallGapCount = 0
+        for (let Y in loc[X]) {
+          smallGapCount += (+Object.keys(loc[X][Y]).length)
+        }
+        let authorViewHeight = +$(window).height() * 0.3
+        let gap = authorViewHeight / (bigGapCount * 3 + smallGapCount)
+        let foo = Math.random()
+        // console.log(bigGapCount, smallGapCount, gap, authorViewHeight, foo)
+        let y = authorViewHeight + 2 * gap * foo
+        // console.log('y', y)
+        for (let Y in loc[X]) {
+          let authors = loc[X][Y]
+          authors.forEach((author) => {
+            let x = (+$(window).width()) * 0.1 + (+$(window).width()) / 15 * X
+            y = y - gap
+            // console.log('y', y)
+            // console.log($(window).width(), $(window).height())
+            // console.log('author', author, x, y)
+            authorDiv
+              .append('div')
+              .attr('id', author.id)
+              .style('position', 'absolute')
+              .style('top', y + 'px')
+              .style('left', x + 'px')
+              .style('text-align', 'center')
+              .append('span')
+              .classed('author', true)
+              .style('text-overflow', 'ellipsis')
+              .style('overflow', 'hidden')
+              .style('white-space', 'nowrap')
+              // .style('width', 320 + 'px')
+              .text(author.name)
+          })
+          y = y - 3 * gap
+        }
+      }
+    },
+    drawTagView (tags, loc) {
+      let tagDiv = d3.select('#tagDiv')
+      tagDiv.selectAll('div').remove()
+      // console.log('authors', authors)
+      // console.log('loc', loc)
+      for (let X in loc) {
+        // console.log('locX', X, loc[X])
+        let bigGapCount = Object.keys(loc[X]).length
+        let smallGapCount = 0
+        for (let Y in loc[X]) {
+          smallGapCount += (+Object.keys(loc[X][Y]).length)
+        }
+        let tagViewHeight = +$(window).height() * 0.3
+        let gap = tagViewHeight / (bigGapCount * 3 + smallGapCount)
+        let foo = Math.random()
+        // console.log(bigGapCount, smallGapCount, gap, authorViewHeight, foo)
+        let y = $(window).height() * 0.7 - 2 * gap * foo
+        // console.log('y', y)
+        for (let Y in loc[X]) {
+          let tags = loc[X][Y]
+          tags.forEach((tag) => {
+            let x = (+$(window).width()) * 0.1 + (+$(window).width()) / 15 * X
+            y = y + gap
+            // console.log('y', y)
+            // console.log($(window).width(), $(window).height())
+            // console.log('author', author, x, y)
+            tagDiv
+              .append('div')
+              .attr('id', tag.id)
+              .style('position', 'absolute')
+              .style('top', y + 'px')
+              .style('left', x + 'px')
+              .style('text-align', 'center')
+              .append('span')
+              .classed('tag', true)
+              .style('text-overflow', 'ellipsis')
+              .style('overflow', 'hidden')
+              .style('white-space', 'nowrap')
+              // .style('width', 320 + 'px')
+              .text(tag.name)
+          })
+          y = y + 3 * gap
         }
       }
     },
@@ -173,7 +308,7 @@ export default {
         .style('top', $(window).height() * 0.5 + 'px')
         .style('left', (d, i) => {
           let winWidth = $(window).width()
-          let x = winWidth * 0.1 + winWidth / 20 * i
+          let x = winWidth * 0.1 + winWidth / 15 * i
           return x + 'px'
         })
         .style('transform', 'rotate(' + 45 + 'deg)')
@@ -198,6 +333,10 @@ export default {
     background: rgba(255,255,255,.5);
     border-radius: 1.5em;
     border: 2px solid #3488BC;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 120px;
     padding-left: 18px;
     padding-right: 4px;
     background: url("../icons/author5.png") no-repeat left center;
